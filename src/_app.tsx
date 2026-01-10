@@ -1,38 +1,16 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {
-	createStaticNavigation,
-	StaticParamList,
-} from '@react-navigation/native';
+import { useEffect, useEffectEvent } from 'react';
 
-import MarketsScreen from './screens/market';
-import MarketScreen from './screens/markets';
-import OrdersScreen from './screens/orders';
-import WalletScreen from './screens/wallet';
-
-const RootStack = createNativeStackNavigator({
-	initialRouteName: 'Markets',
-	screenOptions: {
-		headerShown: false,
-	},
-	screens: {
-		Markets: MarketsScreen,
-		Market: MarketScreen,
-		Orders: OrdersScreen,
-		Wallet: WalletScreen,
-	},
-});
-
-type RootStackParamList = StaticParamList<typeof RootStack>;
-
-declare global {
-	namespace ReactNavigation {
-		interface RootParamList extends RootStackParamList {}
-	}
-}
-
-const Navigation = createStaticNavigation(RootStack);
+import useDB from './stores/db';
+import { Navigation } from './routes';
 
 function App() {
+	const initialize_db = useDB(s => s.initialize);
+	const initialize_db_event = useEffectEvent(initialize_db);
+
+	useEffect(() => {
+		initialize_db_event();
+	}, []);
+
 	return <Navigation />;
 }
 
