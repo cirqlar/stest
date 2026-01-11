@@ -7,11 +7,8 @@ import {
 	StaticParamList,
 } from '@react-navigation/native';
 
-import MarketsScreen from './screens/market';
-import MarketScreen from './screens/markets';
-import OrdersScreen from './screens/orders';
-import WalletScreen from './screens/wallet';
 import WelcomeScreen from './screens/welcome';
+import Home from './screens/home';
 
 const RootStack = createNativeStackNavigator({
 	initialRouteName: 'Welcome',
@@ -20,10 +17,7 @@ const RootStack = createNativeStackNavigator({
 	},
 	screens: {
 		Welcome: WelcomeScreen,
-		Markets: MarketsScreen,
-		Market: MarketScreen,
-		Orders: OrdersScreen,
-		Wallet: WalletScreen,
+		Home: Home,
 	},
 });
 

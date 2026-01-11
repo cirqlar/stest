@@ -1,7 +1,7 @@
 import { Migration } from '../types';
 
 const add_bids_asks_table: Migration = {
-	name: '0005_add_bids_asks_table',
+	name: '0007_add_indices',
 	query: [
 		[
 			`CREATE TABLE IF NOT EXISTS bids (

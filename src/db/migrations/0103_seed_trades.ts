@@ -1,6 +1,6 @@
 import { Scalar } from '@op-engineering/op-sqlite';
 
-import { Migration } from './types';
+import { Migration } from '../types';
 import usdt_trades from '../../provided/seed/trades/USDT-NGN.json';
 import usdc_trades from '../../provided/seed/trades/USDC-NGN.json';
 

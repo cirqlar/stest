@@ -12,7 +12,7 @@ function WelcomeScreen() {
 
 	useEffect(() => {
 		if (db_state === 'initialized') {
-			navigation.replace('Markets');
+			navigation.replace('Home');
 		}
 	}, [db_state, navigation]);
 

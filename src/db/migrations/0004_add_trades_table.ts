@@ -1,4 +1,4 @@
-import { Migration } from './types';
+import { Migration } from '../types';
 
 const add_trades_table: Migration = {
 	name: '0004_add_trades_table',
@@ -11,7 +11,7 @@ const add_trades_table: Migration = {
 				price DOUBLE NOT NULL,
 				size DOUBLE NOT NULL,
 				side TEXT NOT NULL,
-				timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 			)`,
 		],
 	],

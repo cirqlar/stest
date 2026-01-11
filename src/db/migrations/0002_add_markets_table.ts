@@ -1,4 +1,4 @@
-import { Migration } from './types';
+import { Migration } from '../types';
 
 const add_markets_table: Migration = {
 	name: '0002_add_markets_table',
@@ -12,7 +12,7 @@ const add_markets_table: Migration = {
 				tickSize DOUBLE NOT NULL,
 				minOrderSize DOUBLE NOT NULL,
 				initialLastPrice DOUBLE NOT NULL,
-				initialChange24h DOUBLE NOT NULL,
+				initialChange24h DOUBLE NOT NULL
 			)`,
 		],
 	],

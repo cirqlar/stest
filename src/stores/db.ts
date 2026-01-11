@@ -13,7 +13,8 @@ type DBState = {
 		| 'initializing'
 		| 'migrating'
 		| 'seeding'
-		| 'initialized';
+		| 'initialized'
+		| 'error';
 	initialization_progress: number;
 	initialize: () => Promise<void>;
 };
@@ -36,25 +37,31 @@ const useDB = create<DBState>()((set, get) => ({
 
 		for (let i = 0; i < migrations.length; i++) {
 			const migration = migrations[i];
+			try {
+				if (await check_migrated(db, migration.name)) {
+					continue;
+				}
 
-			if (await check_migrated(db, migration.name)) {
-				continue;
+				await db.executeBatch([
+					...(typeof migration.query === 'function'
+						? migration.query()
+						: migration.query),
+					[
+						`INSERT INTO migrations (name)
+								VALUES (?)`,
+						[migration.name],
+					],
+				]);
+
+				set(() => ({
+					initialization_progress: (i + 1) / migrations.length,
+				}));
+			} catch (e) {
+				console.log('Error running migration', migration.name, e);
+				set(() => ({ state: 'error' }));
+
+				return;
 			}
-
-			await db.executeBatch([
-				...(typeof migration.query === 'function'
-					? migration.query()
-					: migration.query),
-				[
-					`INSERT INTO migrations (name)
-							VALUES (?)`,
-					[migration.name],
-				],
-			]);
-
-			set(() => ({
-				initialization_progress: (i + 1) / migrations.length,
-			}));
 		}
 
 		set(() => ({ state: 'initialized' }));

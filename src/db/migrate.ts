@@ -1,13 +1,12 @@
 import { DB, type Transaction } from '@op-engineering/op-sqlite';
-import { Migration } from './migrations/types';
+import { Migration } from './types';
 
 export async function check_migrated(db: DB, name: string): Promise<boolean> {
 	let { rows } = await db.execute(
-		`SELECT COUNT(*) FROM migrations 
+		`SELECT COUNT(*) as count FROM migrations 
 			WHERE name = ?`,
 		[name],
 	);
-
 	return !(rows?.[0].count === 0);
 }
 

@@ -1,4 +1,4 @@
 module.exports = {
-  root: true,
-  extends: '@react-native',
+	root: true,
+	extends: ['@react-native', 'plugin:@tanstack/query/recommended'],
 };

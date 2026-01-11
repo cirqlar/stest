@@ -1,4 +1,4 @@
-import { Migration } from './types';
+import { Migration } from '../types';
 
 const add_balances_table: Migration = {
 	name: '0003_add_balances_table',
@@ -8,7 +8,7 @@ const add_balances_table: Migration = {
 				id INTEGER PRIMARY KEY AUTOINCREMENT,
 				assetId TEXT UNIQUE NOT NULL,
 				available DOUBLE NOT NULL,
-				locked DOUBLE NOT NULL,
+				locked DOUBLE NOT NULL
 			)`,
 		],
 	],

@@ -1,6 +1,6 @@
 import { Scalar } from '@op-engineering/op-sqlite';
 
-import { Migration } from './types';
+import { Migration } from '../types';
 import markets from '../../provided/seed/markets.json';
 
 const seed_markets: Migration = {
