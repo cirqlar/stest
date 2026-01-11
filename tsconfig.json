@@ -4,6 +4,7 @@
     "types": ["jest"],
     "strict": true,
     "moduleResolution": "bundler",
+    "resolveJsonModule": true,
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["**/node_modules", "**/Pods"]

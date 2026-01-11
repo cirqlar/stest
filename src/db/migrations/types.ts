@@ -1,4 +1,6 @@
+import { SQLBatchTuple } from '@op-engineering/op-sqlite';
+
 export type Migration = {
 	name: string;
-	query: string;
+	query: SQLBatchTuple[] | (() => SQLBatchTuple[]);
 };
