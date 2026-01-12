@@ -116,7 +116,7 @@ export function useNewOrderMutation() {
 				}
 
 				commands.push([
-					`UPDATE balances
+					`UPDATE ${BALANCES_TABLE}
 						SET available = ?, locked = ?
 						WHERE assetId = ?`,
 					[
@@ -140,7 +140,7 @@ export function useNewOrderMutation() {
 				}
 
 				commands.push([
-					`UPDATE balances
+					`UPDATE ${BALANCES_TABLE}
 						SET available = ?, locked = ?
 						WHERE assetId = ?`,
 					[
