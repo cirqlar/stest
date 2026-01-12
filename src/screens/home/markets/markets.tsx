@@ -103,7 +103,7 @@ function Market({ item: market }: ListRenderItemInfo<MarketType>) {
 }
 
 const styles = StyleSheet.create({
-	container: { flex: 1, paddingTop: 32, paddingBottom: 32, gap: 20 },
+	container: { flex: 1, paddingTop: 96, paddingBottom: 32, gap: 20 },
 	markets_title: {
 		fontSize: 32,
 		paddingLeft: 20,

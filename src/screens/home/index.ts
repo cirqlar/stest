@@ -7,6 +7,7 @@ const Home = createBottomTabNavigator({
 	initialRouteName: 'MarketsTab',
 	screenOptions: {
 		headerShown: false,
+		tabBarIconStyle: { opacity: 0 },
 	},
 	screens: {
 		MarketsTab: { screen: MarketsTab, options: { tabBarLabel: 'Markets' } },

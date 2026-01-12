@@ -379,7 +379,7 @@ function PlaceOrder({
 }
 
 const styles = StyleSheet.create({
-	container: { flex: 1, paddingTop: 0, paddingBottom: 32, gap: 20 },
+	container: { flex: 1, paddingTop: 96, paddingBottom: 32, gap: 20 },
 	title: { fontSize: 32, paddingLeft: 20, paddingRight: 20, paddingTop: 24 },
 	market_list_container: {
 		paddingLeft: 20,

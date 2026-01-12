@@ -1,10 +1,11 @@
+import { TRADES_TABLE } from '../tables';
 import { Migration } from '../types';
 
 const add_trades_table: Migration = {
 	name: '0004_add_trades_table',
 	query: [
 		[
-			`CREATE TABLE IF NOT EXISTS trades (
+			`CREATE TABLE IF NOT EXISTS ${TRADES_TABLE} (
 				id INTEGER PRIMARY KEY AUTOINCREMENT,
 				tradeId TEXT UNIQUE NOT NULL,
 				marketId TEXT NOT NULL,
@@ -13,6 +14,15 @@ const add_trades_table: Migration = {
 				side TEXT NOT NULL,
 				timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 			)`,
+		],
+		[
+			`CREATE INDEX IF NOT EXISTS trades_tradeId_idx ON ${TRADES_TABLE} (tradeId)`,
+		],
+		[
+			`CREATE INDEX IF NOT EXISTS trades_timestamp_idx ON ${TRADES_TABLE} (timestamp)`,
+		],
+		[
+			`CREATE INDEX IF NOT EXISTS trades_marketId_timestamp_idx ON ${TRADES_TABLE} (marketId, timestamp)`,
 		],
 	],
 };

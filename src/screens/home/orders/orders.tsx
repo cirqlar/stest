@@ -213,7 +213,7 @@ function Order({
 }
 
 const styles = StyleSheet.create({
-	container: { flex: 1, paddingTop: 32, paddingBottom: 32, gap: 20 },
+	container: { flex: 1, paddingTop: 96, paddingBottom: 32, gap: 20 },
 	action_button: {
 		position: 'absolute',
 		bottom: 40,
@@ -224,6 +224,9 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		borderRadius: 8,
+
+		elevation: 5,
+		shadowColor: '#000',
 	},
 	action_button_text: {
 		color: 'white',

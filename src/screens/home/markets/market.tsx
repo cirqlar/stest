@@ -303,7 +303,7 @@ function Trades({ marketId, count, marketBase, marketQuote }: SubViewProps) {
 
 const styles = StyleSheet.create({
 	market_container: { flex: 1 },
-	interals_container: { gap: 32, paddingTop: 32, paddingBottom: 32 },
+	interals_container: { gap: 32, paddingTop: 96, paddingBottom: 32 },
 	orderbook: {
 		paddingLeft: 20,
 		paddingRight: 20,

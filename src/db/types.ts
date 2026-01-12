@@ -38,7 +38,7 @@ export type Order = {
 	side: Side;
 	price: number;
 	size: number;
-	status: string;
+	status: 'pending' | 'cancelled';
 	created_at: number;
 	last_updated: number;
 

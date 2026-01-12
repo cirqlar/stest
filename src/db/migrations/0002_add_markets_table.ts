@@ -1,10 +1,11 @@
+import { MARKETS_TABLE } from '../tables';
 import { Migration } from '../types';
 
 const add_markets_table: Migration = {
 	name: '0002_add_markets_table',
 	query: [
 		[
-			`CREATE TABLE IF NOT EXISTS markets (
+			`CREATE TABLE IF NOT EXISTS ${MARKETS_TABLE} (
 				id INTEGER PRIMARY KEY AUTOINCREMENT,
 				marketId TEXT UNIQUE NOT NULL,
 				base TEXT NOT NULL,

@@ -5,6 +5,7 @@ import { db } from '../db';
 import intitialize_db from '../db/initiallize';
 import migrations from '../db/migrations';
 import { check_migrated } from '../db/migrate';
+import { tables } from '../db/tables';
 
 type DBState = {
 	db: DB;
@@ -17,6 +18,7 @@ type DBState = {
 		| 'error';
 	initialization_progress: number;
 	initialize: () => Promise<void>;
+	reset_db: () => Promise<void>;
 };
 
 const useDB = create<DBState>()((set, get) => ({
@@ -65,6 +67,24 @@ const useDB = create<DBState>()((set, get) => ({
 		}
 
 		set(() => ({ state: 'initialized' }));
+	},
+	reset_db: async () => {
+		if (get().state !== 'initialized' && get().state !== 'error') {
+			return;
+		}
+
+		set({ state: 'uninitialized' });
+
+		try {
+			await get().db.executeBatch(
+				tables.map(table => [`DROP TABLE IF EXISTS ${table}`]),
+				// [`DROP TABLE IF EXISTS ?`, tables.map(table => [table])],
+			);
+
+			await get().initialize();
+		} catch (e) {
+			console.log('Error resetting database', e);
+		}
 	},
 }));
 

@@ -71,7 +71,7 @@ function Wallet({ item: wallet }: ListRenderItemInfo<QueryWallet>) {
 }
 
 const styles = StyleSheet.create({
-	container: { flex: 1, gap: 20, paddingTop: 32, paddingBottom: 32 },
+	container: { flex: 1, gap: 20, paddingTop: 96, paddingBottom: 32 },
 	wallets_title: {
 		fontSize: 32,
 		paddingLeft: 20,

@@ -8,6 +8,10 @@ async function intitialize_db(db: DB) {
 			applied_at DATETIME DEFAULT CURRENT_TIMESTAMP
 		)
 	`);
+
+	await db.execute(
+		`CREATE INDEX IF NOT EXISTS migrations_name_idx ON migrations (name)`,
+	);
 }
 
 export default intitialize_db;

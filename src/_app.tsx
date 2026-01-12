@@ -5,6 +5,7 @@ import useDB from './stores/db';
 import { Navigation } from './routes';
 import queryClient from './queries';
 import useAssets from './stores/assets';
+import ReplayEngine from './components/replay';
 
 function App() {
 	const initialize_db = useDB(s => s.initialize);
@@ -25,6 +26,7 @@ function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<Navigation />
+			<ReplayEngine />
 		</QueryClientProvider>
 	);
 }
