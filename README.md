@@ -1,48 +1,40 @@
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-# Getting Started
+# Using this code
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+#### 1. Setup Environment
 
-## Step 1: Start Metro
+[Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) for React Native
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+#### 2. Start the metro server:
 
 To start the Metro dev server, run the following command from the root of your React Native project:
 
 ```sh
 # Using npm
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Build and run your app
+#### 3. Build and run the app
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
+##### For Android
 
 ```sh
 # Using npm
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
+##### For iOS
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+For iOS, remember to install CocoaPods dependencies.
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+The first time you run this project, run the Ruby bundler to install CocoaPods itself:
 
 ```sh
 bundle install
 ```
 
-Then, and every time you update your native dependencies, run:
+Then:
 
 ```sh
 bundle exec pod install
@@ -50,48 +42,61 @@ bundle exec pod install
 
 For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
 
+And then you can run the app with:
+
 ```sh
 # Using npm
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+# Tests
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+There are currently no tests.
 
-## Step 3: Modify your app
+# Architecture
 
-Now that you have successfully run the app, let's make changes!
+#### State Management
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+- [Tanstack Query](https://tanstack.com/query/latest) is used to cache and manage database queries.
+- [Zustand](https://github.com/pmndrs/zustand) is used for global state.
+- [AsyncStorage](https://github.com/react-native-async-storage/async-storage) is used to store minor data that doesn't benefit from being in the database
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+#### Database
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+Please see `src/db/migrations` to understand how the database is layed out.
 
-## Congratulations! :tada:
+#### Performance
 
-You've successfully run and modified your React Native App. :partying_face:
+- [op-sqlite](https://github.com/OP-Engineering/op-sqlite): a very fast sqlite adapter is used to minimize query latency
+- The database is also indexed to improve retrieval times.
+- Tanstack Query ensures queries do not rerun needlessly. Some queries are also configured to reuse data from broader queries.
 
-### Now what?
+# Further Work
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+#### Testing
 
-# Troubleshooting
+I unfortunately could not get to testing within the alloted time. While the application works, there is no doubt that edge cases that I hadn't considered, and could be caught by testing, exist.
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+Things that should be tested:
 
-# Learn More
+- Migrations: for name uniqueness to prevent clashing, as well as ensuring they all run without errors.
+- Mutations: for correct application as well as ensuring related queries are properly invalidated.
 
-To learn more about React Native, take a look at the following resources:
+#### Error Handling
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+There is very little consistency in error handling. Some possible improvements:
+
+- Better consistency
+- Consider [Effect](https://github.com/Effect-TS/effect) which could make error handling more straightforward.
+
+#### Styling
+
+The styling is servicable but inconsistent with much repitition. Creating a style guide with reusable colors and sizes, as well as reusable styled container/basic components would be a good improvement. A styling library might also be worth considering.
+
+#### Time
+
+I believe I underestimated how much work was required which resulted in an incomplete submission. Better time management as well as automation of some of the work would have been useful.
+
+#### Database
+
+`op-sqlite` has a [reactive queries feature](https://op-engineering.github.io/op-sqlite/docs/reactive_queries) that might be useful for ensuring queries refetch when the database updates.
