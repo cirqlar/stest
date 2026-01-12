@@ -3,6 +3,12 @@ import useDB from '../stores/db';
 import { Market, Order } from '../db/types';
 import { SQLBatchTuple } from '@op-engineering/op-sqlite';
 import { QueryWallet } from './wallet';
+import {
+	ASSETS_TABLE,
+	BALANCES_TABLE,
+	MARKETS_TABLE,
+	ORDERS_TABLE,
+} from '../db/tables';
 
 export type Pagination = { count: number; page: number };
 
@@ -13,7 +19,9 @@ export function useOrders(pagination: Pagination = { count: 10, page: 1 }) {
 		queryKey: ['orders', pagination],
 		queryFn: async () => {
 			let order_count = (
-				await db.execute(`SELECT COUNT(*) as count FROM orders`)
+				await db.execute(
+					`SELECT COUNT(*) as count FROM ${ORDERS_TABLE}`,
+				)
 			).rows[0].count as number;
 
 			if (order_count === 0) {
@@ -31,8 +39,8 @@ export function useOrders(pagination: Pagination = { count: 10, page: 1 }) {
 					`SELECT 
 						o.id as id, o.marketId as marketId, side, price, size, status, created_at, last_updated,
 						base, quote, tickSize, minOrderSize
-					FROM orders AS o
-					JOIN markets AS m
+					FROM ${ORDERS_TABLE} AS o
+					JOIN ${MARKETS_TABLE} AS m
 						ON o.marketId = m.marketId
 					ORDER BY created_at DESC
 					LIMIT ? OFFSET ?`,
@@ -74,15 +82,15 @@ export function useNewOrderMutation() {
 
 			let balances = (
 				await db.execute(
-					`SELECT b.assetId AS assetId, available, locked, decimals, description FROM balances AS b
-								JOIN assets AS a
+					`SELECT b.assetId AS assetId, available, locked, decimals, description FROM ${BALANCES_TABLE} AS b
+								JOIN ${ASSETS_TABLE} AS a
 									ON b.assetId = a.assetId`,
 				)
 			).rows as QueryWallet[];
 
 			let commands: SQLBatchTuple[] = [
 				[
-					`INSERT INTO orders (marketId, side, price, size, status)
+					`INSERT INTO ${ORDERS_TABLE} (marketId, side, price, size, status)
 						VALUES (?, ?, ?, ?, ?)`,
 					[
 						order.marketId!,
@@ -165,8 +173,8 @@ export function useCancelOrderMutation() {
 					`SELECT 
 						o.id as id, o.marketId as marketId, side, price, size, status, created_at, last_updated,
 						base, quote, tickSize, minOrderSize
-					FROM orders AS o
-					JOIN markets AS m
+					FROM ${ORDERS_TABLE} AS o
+					JOIN ${MARKETS_TABLE} AS m
 						ON o.marketId = m.marketId
 						WHERE o.id = ?`,
 					[orderId],
@@ -184,8 +192,8 @@ export function useCancelOrderMutation() {
 
 			let balances = (
 				await db.execute(
-					`SELECT b.assetId AS assetId, available, locked, decimals, description FROM balances AS b
-						JOIN assets AS a
+					`SELECT b.assetId AS assetId, available, locked, decimals, description FROM ${BALANCES_TABLE} AS b
+						JOIN ${ASSETS_TABLE} AS a
 							ON b.assetId = a.assetId`,
 				)
 			).rows as QueryWallet[];
@@ -196,7 +204,7 @@ export function useCancelOrderMutation() {
 
 			let commands: SQLBatchTuple[] = [
 				[
-					`UPDATE orders
+					`UPDATE ${ORDERS_TABLE}
 						SET status = ?, last_updated = CURRENT_TIMESTAMP
 						WHERE id = ?`,
 					['cancelled', orderId],
@@ -219,7 +227,7 @@ export function useCancelOrderMutation() {
 				}
 
 				commands.push([
-					`UPDATE balances
+					`UPDATE ${BALANCES_TABLE}
 						SET available = ?, locked = ?
 						WHERE assetId = ?`,
 					[
@@ -245,7 +253,7 @@ export function useCancelOrderMutation() {
 				}
 
 				commands.push([
-					`UPDATE balances
+					`UPDATE ${BALANCES_TABLE}
 						SET available = ?, locked = ?
 						WHERE assetId = ?`,
 					[

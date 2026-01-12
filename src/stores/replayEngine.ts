@@ -5,6 +5,7 @@ import { Side } from '../db/types';
 import useDB from './db';
 import { QueryClient } from '@tanstack/react-query';
 import queryClient from '../queries';
+import { ASKS_TABLE, BIDS_TABLE, TRADES_TABLE } from '../db/tables';
 
 type Update =
 	| {
@@ -109,7 +110,7 @@ const useReplayEngine = create<ReplayEngineState>()((set, get) => ({
 		if (update.type === 'trade') {
 			try {
 				await db.execute(
-					`INSERT INTO trades (tradeId, marketId, price, size, side, timestamp)
+					`INSERT INTO ${TRADES_TABLE} (tradeId, marketId, price, size, side, timestamp)
 						VALUES (?, ?, ?, ?, ?, ?)`,
 					[
 						update.tradeId,
@@ -135,12 +136,13 @@ const useReplayEngine = create<ReplayEngineState>()((set, get) => ({
 			try {
 				if (update.side === 'ask') {
 					if (update.size === 0) {
-						await db.execute('DELETE FROM asks WHERE size = ?', [
-							update.size,
-						]);
+						await db.execute(
+							`DELETE FROM ${ASKS_TABLE} WHERE size = ?`,
+							[update.size],
+						);
 					} else {
 						await db.execute(
-							`INSERT INTO asks (marketId, price, size)
+							`INSERT INTO ${ASKS_TABLE} (marketId, price, size)
 								VALUES (?, ?, ?)`,
 							[update.market, update.price, update.size],
 						);
@@ -148,12 +150,13 @@ const useReplayEngine = create<ReplayEngineState>()((set, get) => ({
 					queryClient?.invalidateQueries({ queryKey: ['asks'] });
 				} else {
 					if (update.size === 0) {
-						await db.execute('DELETE FROM asks WHERE size = ?', [
-							update.size,
-						]);
+						await db.execute(
+							`DELETE FROM ${BIDS_TABLE} WHERE size = ?`,
+							[update.size],
+						);
 					} else {
 						await db.execute(
-							`INSERT INTO bids (marketId, price, size)
+							`INSERT INTO ${BIDS_TABLE} (marketId, price, size)
 								VALUES (?, ?, ?)`,
 							[update.market, update.price, update.size],
 						);

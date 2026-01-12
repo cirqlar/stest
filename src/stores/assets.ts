@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 import { Asset } from '../db/types';
 import useDB from './db';
+import { ASSETS_TABLE } from '../db/tables';
 
 type AssetStoreState = {
 	assets: Record<string, Asset>;
@@ -19,7 +20,9 @@ const useAssets = create<AssetStoreState>()(set => ({
 
 		try {
 			const assets_ret = (
-				await useDB.getState().db.execute(`SELECT * FROM assets`)
+				await useDB
+					.getState()
+					.db.execute(`SELECT * FROM ${ASSETS_TABLE}`)
 			).rows as Asset[];
 
 			let assets: AssetStoreState['assets'] = {};

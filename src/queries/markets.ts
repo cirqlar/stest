@@ -3,13 +3,20 @@ import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query';
 import useDB from '../stores/db';
 import { Market, OrderBookItem, Trade } from '../db/types';
 import { useMemo } from 'react';
+import {
+	ASKS_TABLE,
+	BIDS_TABLE,
+	MARKETS_TABLE,
+	TRADES_TABLE,
+} from '../db/tables';
 
 export function useMarkets() {
 	const db = useDB(s => s.db);
 	let query = useQuery({
 		queryKey: ['markets'],
 		queryFn: async () =>
-			(await db.execute('SELECT * FROM markets')).rows as Market[],
+			(await db.execute(`SELECT * FROM ${MARKETS_TABLE}`))
+				.rows as Market[],
 	});
 
 	return query;
@@ -23,9 +30,10 @@ export function useMarket(marketId: string) {
 		queryKey: ['markets', marketId],
 		queryFn: async () =>
 			(
-				await db.execute('SELECT * FROM markets WHERE marketId = ?', [
-					marketId,
-				])
+				await db.execute(
+					`SELECT * FROM ${MARKETS_TABLE} WHERE marketId = ?`,
+					[marketId],
+				)
 			).rows[0] as Market,
 		initialData: () => {
 			const marketData: Market[] | undefined = queryClient.getQueryData([
@@ -51,7 +59,7 @@ export function useTopBidsOptions(marketId: string, count: number) {
 				queryFn: async () => {
 					return (
 						await db.execute(
-							`SELECT * FROM bids
+							`SELECT * FROM ${BIDS_TABLE}
 								WHERE marketId = ?
 							ORDER BY price DESC
 							LIMIT ?`,
@@ -86,7 +94,7 @@ export function useTopAsksOptions(marketId: string, count: number) {
 				queryFn: async () => {
 					return (
 						await db.execute(
-							`SELECT * FROM asks
+							`SELECT * FROM ${ASKS_TABLE}
 								WHERE marketId = ?
 							ORDER BY price ASC
 							LIMIT ?`,
@@ -121,7 +129,7 @@ export function useRecentTradesOptions(marketId: string, count: number) {
 				queryFn: async () => {
 					return (
 						await db.execute(
-							`SELECT * FROM trades
+							`SELECT * FROM ${TRADES_TABLE}
 								WHERE marketId = ?
 							ORDER BY timestamp DESC
 							LIMIT ?`,

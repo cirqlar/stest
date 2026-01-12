@@ -5,7 +5,7 @@ import { db } from '../db';
 import intitialize_db from '../db/initiallize';
 import migrations from '../db/migrations';
 import { check_migrated } from '../db/migrate';
-import { tables } from '../db/tables';
+import { MIGRATIONS_TABLE, tables } from '../db/tables';
 
 type DBState = {
 	db: DB;
@@ -49,7 +49,7 @@ const useDB = create<DBState>()((set, get) => ({
 						? migration.query()
 						: migration.query),
 					[
-						`INSERT INTO migrations (name)
+						`INSERT INTO ${MIGRATIONS_TABLE} (name)
 								VALUES (?)`,
 						[migration.name],
 					],
@@ -78,7 +78,6 @@ const useDB = create<DBState>()((set, get) => ({
 		try {
 			await get().db.executeBatch(
 				tables.map(table => [`DROP TABLE IF EXISTS ${table}`]),
-				// [`DROP TABLE IF EXISTS ?`, tables.map(table => [table])],
 			);
 
 			await get().initialize();
