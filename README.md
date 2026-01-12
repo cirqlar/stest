@@ -1,6 +1,6 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
-
 # Using this code
+
+A screen recording showing the app's functionality can be found [here](https://drive.google.com/file/d/1Bu6qABCdjJMguxrYeuBJ3pqtNwFSsLYy/view?usp=sharing)
 
 #### 1. Setup Environment
 
