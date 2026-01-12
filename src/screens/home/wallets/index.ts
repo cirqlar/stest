@@ -5,7 +5,7 @@ import WalletScreen from './wallet';
 const WalletTab = createNativeStackNavigator({
 	initialRouteName: 'Wallet',
 	screens: {
-		Wallet: WalletScreen,
+		Wallet: { screen: WalletScreen, options: { headerShown: false } },
 	},
 });
 

@@ -23,7 +23,7 @@ const seed_markets: Migration = {
 
 		return [
 			[
-				`INSERT INTO markets (marketId, base, quote, tickSize, minOrderSize, initialLastPrice, initialChange24h)
+				`INSERT INTO markets (marketId, base, quote, tickSize, minOrderSize, lastPrice, change24h)
 					VALUES (?, ?, ?, ?, ?, ?, ?)`,
 				values,
 			],

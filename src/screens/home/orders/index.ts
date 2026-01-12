@@ -6,8 +6,11 @@ import NewOrderScreen from './new_order';
 const OrdersTab = createNativeStackNavigator({
 	initialRouteName: 'Orders',
 	screens: {
-		Orders: OrdersScreen,
-		NewOrder: NewOrderScreen,
+		Orders: { screen: OrdersScreen, options: { headerShown: false } },
+		NewOrder: {
+			screen: NewOrderScreen,
+			options: { title: 'New Limit Order' },
+		},
 	},
 });
 

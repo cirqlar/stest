@@ -5,6 +5,8 @@ export type Migration = {
 	query: SQLBatchTuple[] | (() => SQLBatchTuple[]);
 };
 
+export type Side = 'buy' | 'sell';
+
 export type Market = {
 	id: number;
 	marketId: string;
@@ -12,8 +14,8 @@ export type Market = {
 	quote: string;
 	tickSize: number;
 	minOrderSize: number;
-	initialLastPrice: number;
-	initialChange24h: number;
+	lastPrice: number;
+	change24h: number;
 };
 
 export type Wallet = {
@@ -33,12 +35,17 @@ export type Asset = {
 export type Order = {
 	id: number;
 	marketId: string;
-	side: string;
+	side: Side;
 	price: number;
 	size: number;
 	status: string;
 	created_at: number;
 	last_updated: number;
+
+	base: string;
+	quote: string;
+	tickSize: number;
+	minOrderSize: number;
 };
 
 export type OrderBookItem = {
@@ -54,6 +61,6 @@ export type Trade = {
 	marketId: string;
 	price: number;
 	size: number;
-	side: string;
+	side: Side;
 	timestamp: number;
 };

@@ -11,8 +11,8 @@ const add_markets_table: Migration = {
 				quote TEXT NOT NULL,
 				tickSize DOUBLE NOT NULL,
 				minOrderSize DOUBLE NOT NULL,
-				initialLastPrice DOUBLE NOT NULL,
-				initialChange24h DOUBLE NOT NULL
+				lastPrice DOUBLE NOT NULL,
+				change24h DOUBLE NOT NULL
 			)`,
 		],
 	],
