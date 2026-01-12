@@ -2,11 +2,11 @@
 
 A screen recording showing the app's functionality can be found [here](https://drive.google.com/file/d/1Bu6qABCdjJMguxrYeuBJ3pqtNwFSsLYy/view?usp=sharing)
 
-#### 1. Setup Environment
+### 1. Setup Environment
 
 [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) for React Native
 
-#### 2. Start the metro server:
+### 2. Start the metro server:
 
 To start the Metro dev server, run the following command from the root of your React Native project:
 
@@ -15,16 +15,16 @@ To start the Metro dev server, run the following command from the root of your R
 npm start
 ```
 
-#### 3. Build and run the app
+### 3. Build and run the app
 
-##### For Android
+#### For Android
 
 ```sh
 # Using npm
 npm run android
 ```
 
-##### For iOS
+#### For iOS
 
 For iOS, remember to install CocoaPods dependencies.
 
