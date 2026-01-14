@@ -53,7 +53,12 @@ npm run ios
 
 # Tests
 
-There are currently no tests.
+Tests are location in the `__tests__` directory. Tests can be run with:
+
+```sh
+# Using npm
+npm test
+```
 
 # Architecture
 
