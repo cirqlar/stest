@@ -1,11 +1,8 @@
 import { DB } from '@op-engineering/op-sqlite';
 import { create } from 'zustand';
 
-import { db } from '../db';
-import intitialize_db from '../db/initiallize';
+import { db, empty_db, intitialize_db, migrate_db } from '../db';
 import migrations from '../db/migrations';
-import { check_migrated } from '../db/migrate';
-import { MIGRATIONS_TABLE, tables } from '../db/tables';
 
 type DBState = {
 	db: DB;
@@ -37,33 +34,17 @@ const useDB = create<DBState>()((set, get) => ({
 
 		set(() => ({ state: 'migrating' }));
 
-		for (let i = 0; i < migrations.length; i++) {
-			const migration = migrations[i];
-			try {
-				if (await check_migrated(db, migration.name)) {
-					continue;
-				}
-
-				await db.executeBatch([
-					...(typeof migration.query === 'function'
-						? migration.query()
-						: migration.query),
-					[
-						`INSERT INTO ${MIGRATIONS_TABLE} (name)
-								VALUES (?)`,
-						[migration.name],
-					],
-				]);
-
+		try {
+			migrate_db(database, percent =>
 				set(() => ({
-					initialization_progress: (i + 1) / migrations.length,
-				}));
-			} catch (e) {
-				console.log('Error running migration', migration.name, e);
-				set(() => ({ state: 'error' }));
+					initialization_progress: (percent + 1) / migrations.length,
+				})),
+			);
+		} catch (e) {
+			console.log('Error running migrations', e);
+			set(() => ({ state: 'error' }));
 
-				return;
-			}
+			return;
 		}
 
 		set(() => ({ state: 'initialized' }));
@@ -76,9 +57,7 @@ const useDB = create<DBState>()((set, get) => ({
 		set({ state: 'uninitialized' });
 
 		try {
-			await get().db.executeBatch(
-				tables.map(table => [`DROP TABLE IF EXISTS ${table}`]),
-			);
+			await empty_db(get().db);
 
 			await get().initialize();
 		} catch (e) {

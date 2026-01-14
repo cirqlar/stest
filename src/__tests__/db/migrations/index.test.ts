@@ -1,13 +1,18 @@
-import { db } from '../../../src/db/index';
-import intitialize_db from '../../../src/db/initiallize';
+import { db, intitialize_db } from '@/db';
 
-import migrations from '../../../src/db/migrations';
+import migrations from '@/db/migrations';
 
-jest.mock('../../../src/db/index', () => {
-	const datab = jest.requireActual('../mock_db');
+jest.mock('@op-engineering/op-sqlite', () => {
+	return { __esModule: true, open: () => {} };
+});
+
+jest.mock('@/db', () => {
+	const datab = jest.requireActual('@/__tests__/mocks/mock_db');
+	const orig = jest.requireActual('@/db');
 
 	return {
 		__esModule: true,
+		...orig,
 		db: new datab.DB(),
 	};
 });

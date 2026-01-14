@@ -8,7 +8,7 @@ export class DB {
 		this.db = new Database(':memory:');
 	}
 
-	async run(
+	run(
 		statement: ReturnType<ReturnType<typeof Database>['prepare']>,
 		params?: Scalar[],
 	) {
@@ -37,7 +37,6 @@ export class DB {
 					}
 				} else {
 					// Scalar[] or undefined
-
 					this.run(statement, command[1] as Scalar[] | undefined);
 				}
 			}
