@@ -1,11 +1,18 @@
 import { create } from 'zustand';
+import { QueryClient } from '@tanstack/react-query';
 
 import content from '../provided/stream/market_stream.ndjson';
 import { Side } from '../db/types';
 import useDB from './db';
-import { QueryClient } from '@tanstack/react-query';
 import queryClient from '../queries';
-import { ASKS_TABLE, BIDS_TABLE, TRADES_TABLE } from '../db/tables';
+import { insertOrIgnoreTrade } from '../db/queries/trades';
+import {
+	deleteOrderbookItem,
+	// insertOrderbookItem,
+	insertOrUpdateOrderbookItem,
+	// selectOrderbookItem,
+	// updateOrderbookItemSize,
+} from '../db/queries/orderbook_item';
 
 type Update =
 	| {
@@ -109,17 +116,15 @@ const useReplayEngine = create<ReplayEngineState>()((set, get) => ({
 
 		if (update.type === 'trade') {
 			try {
+				const insert_trade_query = insertOrIgnoreTrade({
+					...update,
+					marketId: update.market,
+					timestamp: update.ts,
+				});
+
 				await db.execute(
-					`INSERT INTO ${TRADES_TABLE} (tradeId, marketId, price, size, side, timestamp)
-						VALUES (?, ?, ?, ?, ?, ?)`,
-					[
-						update.tradeId,
-						update.market,
-						update.price,
-						update.size,
-						update.side,
-						update.ts,
-					],
+					insert_trade_query.queryString,
+					insert_trade_query.params,
 				);
 
 				queryClient?.invalidateQueries({ queryKey: ['trades'] });
@@ -134,33 +139,64 @@ const useReplayEngine = create<ReplayEngineState>()((set, get) => ({
 			}
 		} else {
 			try {
+				if (update.size === 0) {
+					const delete_item_query = deleteOrderbookItem(
+						update.side,
+						update.price,
+					);
+
+					await db.execute(
+						delete_item_query.queryString,
+						delete_item_query.params,
+					);
+				} else {
+					const insert_item_query = insertOrUpdateOrderbookItem(
+						update.side,
+						{ ...update, marketId: update.market },
+					);
+
+					await db.execute(
+						insert_item_query.queryString,
+						insert_item_query.params,
+					);
+
+					// const existing_item_query = selectOrderbookItem(
+					// 	update.side,
+					// 	update.market,
+					// 	update.price,
+					// );
+					// const existing_items = await db.execute(
+					// 	existing_item_query.queryString,
+					// 	existing_item_query.params,
+					// );
+
+					// if (existing_items.rows.length > 0) {
+					// 	const update_item_query = updateOrderbookItemSize(
+					// 		update.side,
+					// 		update.market,
+					// 		update.price,
+					// 		update.size,
+					// 	);
+
+					// 	await db.execute(
+					// 		update_item_query.queryString,
+					// 		update_item_query.params,
+					// 	);
+					// } else {
+					// 	const insert_item_query = insertOrderbookItem(
+					// 		update.side,
+					// 		{ ...update, marketId: update.market },
+					// 	);
+					// 	await db.execute(
+					// 		insert_item_query.queryString,
+					// 		insert_item_query.params,
+					// 	);
+					// }
+				}
+
 				if (update.side === 'ask') {
-					if (update.size === 0) {
-						await db.execute(
-							`DELETE FROM ${ASKS_TABLE} WHERE size = ?`,
-							[update.size],
-						);
-					} else {
-						await db.execute(
-							`INSERT INTO ${ASKS_TABLE} (marketId, price, size)
-								VALUES (?, ?, ?)`,
-							[update.market, update.price, update.size],
-						);
-					}
 					queryClient?.invalidateQueries({ queryKey: ['asks'] });
 				} else {
-					if (update.size === 0) {
-						await db.execute(
-							`DELETE FROM ${BIDS_TABLE} WHERE size = ?`,
-							[update.size],
-						);
-					} else {
-						await db.execute(
-							`INSERT INTO ${BIDS_TABLE} (marketId, price, size)
-								VALUES (?, ?, ?)`,
-							[update.market, update.price, update.size],
-						);
-					}
 					queryClient?.invalidateQueries({ queryKey: ['bids'] });
 				}
 			} catch (e) {

@@ -1,8 +1,13 @@
-import { SQLBatchTuple } from '@op-engineering/op-sqlite';
+import { Scalar, SQLBatchTuple } from '@op-engineering/op-sqlite';
 
 export type Migration = {
 	name: string;
 	query: SQLBatchTuple[] | (() => SQLBatchTuple[]);
+};
+
+export type DBQuery = {
+	queryString: string;
+	params?: Scalar[];
 };
 
 export type Side = 'buy' | 'sell';

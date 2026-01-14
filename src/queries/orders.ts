@@ -1,14 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { SQLBatchTuple } from '@op-engineering/op-sqlite';
+
 import useDB from '../stores/db';
 import { Market, Order } from '../db/types';
-import { SQLBatchTuple } from '@op-engineering/op-sqlite';
 import { QueryWallet } from './wallet';
 import {
-	ASSETS_TABLE,
-	BALANCES_TABLE,
-	MARKETS_TABLE,
-	ORDERS_TABLE,
-} from '../db/tables';
+	insertOrder,
+	selectOrderCount,
+	selectOrdersWithOffset,
+	selectSingleOrder,
+	updateOrderStatus,
+} from '../db/queries/orders';
+import { selectAllBalances, updateBalance } from '../db/queries/balances';
 
 export type Pagination = { count: number; page: number };
 
@@ -18,9 +21,11 @@ export function useOrders(pagination: Pagination = { count: 10, page: 1 }) {
 	const res = useQuery({
 		queryKey: ['orders', pagination],
 		queryFn: async () => {
+			const order_count_query = selectOrderCount();
 			let order_count = (
 				await db.execute(
-					`SELECT COUNT(*) as count FROM ${ORDERS_TABLE}`,
+					order_count_query.queryString,
+					order_count_query.params,
 				)
 			).rows[0].count as number;
 
@@ -34,21 +39,12 @@ export function useOrders(pagination: Pagination = { count: 10, page: 1 }) {
 				throw 'Page out of range';
 			}
 
+			const orders_query = selectOrdersWithOffset(
+				pagination.count,
+				pagination.count * (pagination.page - 1),
+			);
 			let orders = (
-				await db.execute(
-					`SELECT 
-						o.id as id, o.marketId as marketId, side, price, size, status, created_at, last_updated,
-						base, quote, tickSize, minOrderSize
-					FROM ${ORDERS_TABLE} AS o
-					JOIN ${MARKETS_TABLE} AS m
-						ON o.marketId = m.marketId
-					ORDER BY created_at DESC
-					LIMIT ? OFFSET ?`,
-					[
-						pagination.count,
-						pagination.count * (pagination.page - 1),
-					],
-				)
+				await db.execute(orders_query.queryString, orders_query.params)
 			).rows as Order[];
 
 			return { orders, page_count };
@@ -80,26 +76,23 @@ export function useNewOrderMutation() {
 				throw new Error('Not enough information to place order');
 			}
 
+			const balances_query = selectAllBalances();
 			let balances = (
 				await db.execute(
-					`SELECT b.assetId AS assetId, available, locked, decimals, description FROM ${BALANCES_TABLE} AS b
-								JOIN ${ASSETS_TABLE} AS a
-									ON b.assetId = a.assetId`,
+					balances_query.queryString,
+					balances_query.params,
 				)
 			).rows as QueryWallet[];
 
+			const insert_order_query = insertOrder({
+				marketId: order.marketId!,
+				side: order.side!,
+				price: order.price!,
+				size: order.size!,
+				status: 'pending',
+			});
 			let commands: SQLBatchTuple[] = [
-				[
-					`INSERT INTO ${ORDERS_TABLE} (marketId, side, price, size, status)
-						VALUES (?, ?, ?, ?, ?)`,
-					[
-						order.marketId!,
-						order.side!,
-						order.price!,
-						order.size!,
-						'pending',
-					],
-				],
+				[insert_order_query.queryString, insert_order_query.params!],
 			];
 
 			if (order.side === 'sell') {
@@ -115,15 +108,14 @@ export function useNewOrderMutation() {
 					throw new Error('Insufficient funds');
 				}
 
+				const updated_balance_query = updateBalance(
+					base_balance.assetId,
+					base_balance.available - order.size!,
+					base_balance.locked + order.size!,
+				);
 				commands.push([
-					`UPDATE ${BALANCES_TABLE}
-						SET available = ?, locked = ?
-						WHERE assetId = ?`,
-					[
-						base_balance.available - order.size!,
-						base_balance.locked + order.size!,
-						base_balance.assetId,
-					],
+					updated_balance_query.queryString,
+					updated_balance_query.params!,
 				]);
 			} else {
 				const quote_balance = balances.find(
@@ -139,15 +131,14 @@ export function useNewOrderMutation() {
 					throw new Error('Insufficient funds');
 				}
 
+				const updated_balance_query = updateBalance(
+					quote_balance.assetId,
+					quote_balance.available - quote_amount,
+					quote_balance.locked + quote_amount,
+				);
 				commands.push([
-					`UPDATE ${BALANCES_TABLE}
-						SET available = ?, locked = ?
-						WHERE assetId = ?`,
-					[
-						quote_balance.available - quote_amount,
-						quote_balance.locked + quote_amount,
-						quote_balance.assetId,
-					],
+					updated_balance_query.queryString,
+					updated_balance_query.params!,
 				]);
 			}
 
@@ -168,17 +159,9 @@ export function useCancelOrderMutation() {
 
 	const mutation = useMutation({
 		mutationFn: async (orderId: number) => {
+			const order_query = selectSingleOrder(orderId);
 			let order = (
-				await db.execute(
-					`SELECT 
-						o.id as id, o.marketId as marketId, side, price, size, status, created_at, last_updated,
-						base, quote, tickSize, minOrderSize
-					FROM ${ORDERS_TABLE} AS o
-					JOIN ${MARKETS_TABLE} AS m
-						ON o.marketId = m.marketId
-						WHERE o.id = ?`,
-					[orderId],
-				)
+				await db.execute(order_query.queryString, order_query.params)
 			).rows?.[0] as Order;
 
 			if (!order) {
@@ -190,11 +173,11 @@ export function useCancelOrderMutation() {
 				return;
 			}
 
+			const balances_query = selectAllBalances();
 			let balances = (
 				await db.execute(
-					`SELECT b.assetId AS assetId, available, locked, decimals, description FROM ${BALANCES_TABLE} AS b
-						JOIN ${ASSETS_TABLE} AS a
-							ON b.assetId = a.assetId`,
+					balances_query.queryString,
+					balances_query.params,
 				)
 			).rows as QueryWallet[];
 
@@ -202,13 +185,9 @@ export function useCancelOrderMutation() {
 				throw new Error("Couldn't get wallet balances");
 			}
 
+			const update_order_query = updateOrderStatus(orderId, 'cancelled');
 			let commands: SQLBatchTuple[] = [
-				[
-					`UPDATE ${ORDERS_TABLE}
-						SET status = ?, last_updated = CURRENT_TIMESTAMP
-						WHERE id = ?`,
-					['cancelled', orderId],
-				],
+				[update_order_query.queryString, update_order_query.params!],
 			];
 
 			if (order.side === 'sell') {
@@ -226,15 +205,14 @@ export function useCancelOrderMutation() {
 					);
 				}
 
+				const update_balance_query = updateBalance(
+					base_balance.assetId,
+					base_balance.available + order.size!,
+					base_balance.locked - order.size!,
+				);
 				commands.push([
-					`UPDATE ${BALANCES_TABLE}
-						SET available = ?, locked = ?
-						WHERE assetId = ?`,
-					[
-						base_balance.available + order.size!,
-						base_balance.locked - order.size!,
-						base_balance.assetId,
-					],
+					update_balance_query.queryString,
+					update_balance_query.params!,
 				]);
 			} else {
 				const quote_balance = balances.find(
@@ -252,15 +230,14 @@ export function useCancelOrderMutation() {
 					);
 				}
 
+				const update_balance_query = updateBalance(
+					quote_balance.assetId,
+					quote_balance.available + quote_amount,
+					quote_balance.locked - quote_amount,
+				);
 				commands.push([
-					`UPDATE ${BALANCES_TABLE}
-						SET available = ?, locked = ?
-						WHERE assetId = ?`,
-					[
-						quote_balance.available + quote_amount,
-						quote_balance.locked - quote_amount,
-						quote_balance.assetId,
-					],
+					update_balance_query.queryString,
+					update_balance_query.params!,
 				]);
 			}
 
