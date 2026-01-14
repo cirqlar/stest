@@ -1,3 +1,5 @@
 module.exports = {
-  preset: 'react-native',
+	preset: 'react-native',
+
+	testMatch: ['**/?(*.)+(spec|test).(t|j)s?(x)'],
 };
