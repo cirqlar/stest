@@ -1,3 +1,5 @@
+##### NB: see the `improvements` branch for changes made after the deadline
+
 # Using this code
 
 A screen recording showing the app's functionality can be found [here](https://drive.google.com/file/d/1Bu6qABCdjJMguxrYeuBJ3pqtNwFSsLYy/view?usp=sharing)
