@@ -51,7 +51,7 @@ npm run ios
 
 # Tests
 
-Tests are location in the `__tests__` directory. Tests can be run with:
+Tests are location in the `src/__tests__` directory. Tests can be run with:
 
 ```sh
 # Using npm
