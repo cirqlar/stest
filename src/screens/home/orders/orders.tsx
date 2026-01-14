@@ -10,11 +10,11 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import { useCancelOrderMutation, useOrders } from '../../../queries/orders';
-import { Order as OrderType } from '../../../db/types';
-import LoadingComponent from '../../../components/loading';
-import ErrorComponent from '../../../components/error';
-import useAssets from '../../../stores/assets';
+import { useCancelOrderMutation, useOrders } from '@/queries/orders';
+import { Order as OrderType } from '@/db/types';
+import LoadingComponent from '@/components/loading';
+import ErrorComponent from '@/components/error';
+import useAssets from '@/stores/assets';
 
 function OrdersScreen() {
 	const navigation = useNavigation();

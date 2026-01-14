@@ -1,9 +1,9 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-
-import useReplayEngine from '../stores/replayEngine';
-import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useEffectEvent } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import useReplayEngine from '@/stores/replayEngine';
 
 export default function ReplayEngine() {
 	const queryClient = useQueryClient();

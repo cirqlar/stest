@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native';
-import useDB from '../stores/db';
-import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { AppNavigationProp } from '../routes';
+import { StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+import useDB from '@/stores/db';
+import { AppNavigationProp } from '@/routes';
 
 function WelcomeScreen() {
 	const navigation = useNavigation<AppNavigationProp>();

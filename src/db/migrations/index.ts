@@ -1,4 +1,4 @@
-import { Migration } from '../types';
+import { Migration } from '@/db/types';
 
 import add_assets_table from './0001_add_assets_table';
 import add_markets_table from './0002_add_markets_table';

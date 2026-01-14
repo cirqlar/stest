@@ -1,5 +1,5 @@
-import { MARKETS_TABLE, ORDERS_TABLE } from '../tables';
-import { DBQuery, Order } from '../types';
+import { MARKETS_TABLE, ORDERS_TABLE } from '@/db/tables';
+import { DBQuery, Order } from '@/db/types';
 
 export function selectOrderCount(): DBQuery {
 	return {

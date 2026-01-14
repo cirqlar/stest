@@ -1,5 +1,5 @@
-import { MARKETS_TABLE } from '../tables';
-import { Migration } from '../types';
+import { MARKETS_TABLE } from '@/db/tables';
+import { Migration } from '@/db/types';
 
 const add_markets_table: Migration = {
 	name: '0002_add_markets_table',

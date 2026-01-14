@@ -8,7 +8,9 @@ import {
 	Text,
 	View,
 } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
 
+import { Market } from '@/db/types';
 import {
 	useMarket,
 	useRecentTrades,
@@ -17,12 +19,10 @@ import {
 	useTopAsksOptions,
 	useTopBids,
 	useTopBidsOptions,
-} from '../../../queries/markets';
-import LoadingComponent from '../../../components/loading';
-import ErrorComponent from '../../../components/error';
-import { useQueryClient } from '@tanstack/react-query';
-import useAssets from '../../../stores/assets';
-import { Market } from '../../../db/types';
+} from '@/queries/markets';
+import LoadingComponent from '@/components/loading';
+import ErrorComponent from '@/components/error';
+import useAssets from '@/stores/assets';
 
 export type Props = {
 	marketId: string;

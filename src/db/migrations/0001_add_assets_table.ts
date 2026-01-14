@@ -1,5 +1,5 @@
-import { ASSETS_TABLE } from '../tables';
-import { Migration } from '../types';
+import { ASSETS_TABLE } from '@/db/tables';
+import { Migration } from '@/db/types';
 
 const add_assets_table: Migration = {
 	name: '0001_add_assets_table',

@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { QueryClient } from '@tanstack/react-query';
 
-import content from '../provided/stream/market_stream.ndjson';
-import { Side } from '../db/types';
-import useDB from './db';
-import queryClient from '../queries';
-import { insertOrIgnoreTrade } from '../db/queries/trades';
+import content from '@/provided/stream/market_stream.ndjson';
+import { Side } from '@/db/types';
+import useDB from '@/stores/db';
+import queryClient from '@/queries';
+import { insertOrIgnoreTrade } from '@/db/queries/trades';
 import {
 	deleteOrderbookItem,
 	// insertOrderbookItem,
@@ -52,7 +52,7 @@ type ReplayEngineState = {
 	processed: number;
 	updates_per_second: number;
 	status: 'paused' | 'playing' | 'finished' | 'resetting';
-	playback_handle?: number;
+	playback_handle?: ReturnType<typeof setInterval>;
 	queryClient?: QueryClient;
 	start_playback: () => void;
 	pause_playback: (finished?: boolean) => void;

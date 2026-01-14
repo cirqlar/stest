@@ -1,7 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MarketsTab from './markets';
-import OrdersTab from './orders';
-import WalletTab from './wallets';
+
+import MarketsTab from '@/screens/home/markets';
+import OrdersTab from '@/screens/home/orders';
+import WalletTab from '@/screens/home/wallets';
 
 const Home = createBottomTabNavigator({
 	initialRouteName: 'MarketsTab',

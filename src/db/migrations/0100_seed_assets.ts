@@ -1,7 +1,7 @@
 import { Scalar } from '@op-engineering/op-sqlite';
 
-import { Migration } from '../types';
-import assets from '../../provided/seed/assets.json';
+import { Migration } from '@/db/types';
+import assets from '@/provided/seed/assets.json';
 
 const seed_assets: Migration = {
 	name: '0100_seed_assets',

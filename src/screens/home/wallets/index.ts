@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import WalletScreen from './wallet';
+import WalletScreen from '@/screens/home/wallets/wallet';
 
 const WalletTab = createNativeStackNavigator({
 	initialRouteName: 'Wallet',

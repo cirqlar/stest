@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 
-import { Asset } from '../db/types';
-import useDB from './db';
-import { selectAllAssets } from '../db/queries/assets';
+import { Asset } from '@/db/types';
+import useDB from '@/stores/db';
+import { selectAllAssets } from '@/db/queries/assets';
 
 type AssetStoreState = {
 	assets: Record<string, Asset>;

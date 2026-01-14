@@ -1,17 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SQLBatchTuple } from '@op-engineering/op-sqlite';
 
-import useDB from '../stores/db';
-import { Market, Order } from '../db/types';
-import { QueryWallet } from './wallet';
+import useDB from '@/stores/db';
+import { Market, Order } from '@/db/types';
+import { QueryWallet } from '@/queries/wallet';
 import {
 	insertOrder,
 	selectOrderCount,
 	selectOrdersWithOffset,
 	selectSingleOrder,
 	updateOrderStatus,
-} from '../db/queries/orders';
-import { selectAllBalances, updateBalance } from '../db/queries/balances';
+} from '@/db/queries/orders';
+import { selectAllBalances, updateBalance } from '@/db/queries/balances';
 
 export type Pagination = { count: number; page: number };
 

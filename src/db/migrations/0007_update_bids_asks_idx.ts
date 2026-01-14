@@ -1,5 +1,5 @@
-import { ASKS_TABLE, BIDS_TABLE } from '../tables';
-import { Migration } from '../types';
+import { ASKS_TABLE, BIDS_TABLE } from '@/db/tables';
+import { Migration } from '@/db/types';
 
 const update_bids_asks_idx: Migration = {
 	name: '0007_update_bids_asks_idx',

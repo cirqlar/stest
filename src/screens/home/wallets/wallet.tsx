@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { useEffect } from 'react';
 
-import { QueryWallet, useWalletsQuery } from '../../../queries/wallet';
+import { QueryWallet, useWalletsQuery } from '@/queries/wallet';
 
 function WalletScreen() {
 	return (

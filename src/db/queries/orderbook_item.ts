@@ -1,5 +1,5 @@
-import { ASKS_TABLE, BIDS_TABLE } from '../tables';
-import { DBQuery, OrderBookItem } from '../types';
+import { ASKS_TABLE, BIDS_TABLE } from '@/db/tables';
+import { DBQuery, OrderBookItem } from '@/db/types';
 
 type BASide = 'bid' | 'ask';
 

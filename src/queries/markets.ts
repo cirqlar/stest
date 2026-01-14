@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import useDB from '../stores/db';
-import { Market, OrderBookItem, Trade } from '../db/types';
-import { selectRecentTrades } from '../db/queries/trades';
-import { selectTopOrderbookItems } from '../db/queries/orderbook_item';
-import { selectAllMarkets, selectSingleMarket } from '../db/queries/markets';
+import useDB from '@/stores/db';
+import { Market, OrderBookItem, Trade } from '@/db/types';
+import { selectRecentTrades } from '@/db/queries/trades';
+import { selectTopOrderbookItems } from '@/db/queries/orderbook_item';
+import { selectAllMarkets, selectSingleMarket } from '@/db/queries/markets';
 
 export function useMarkets() {
 	const db = useDB(s => s.db);

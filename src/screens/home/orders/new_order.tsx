@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { useMarkets } from '../../../queries/markets';
-import LoadingComponent from '../../../components/loading';
-import ErrorComponent from '../../../components/error';
 import {
 	StackActions,
 	useNavigation,
 	usePreventRemove,
 } from '@react-navigation/native';
-import { Market, Order } from '../../../db/types';
-import { useWalletsQuery } from '../../../queries/wallet';
-import useAssets from '../../../stores/assets';
-import { useNewOrderMutation } from '../../../queries/orders';
+
+import { useMarkets } from '@/queries/markets';
+import LoadingComponent from '@/components/loading';
+import ErrorComponent from '@/components/error';
+import { Market, Order } from '@/db/types';
+import { useWalletsQuery } from '@/queries/wallet';
+import useAssets from '@/stores/assets';
+import { useNewOrderMutation } from '@/queries/orders';
 
 function NewOrderScreen() {
 	const navigation = useNavigation();

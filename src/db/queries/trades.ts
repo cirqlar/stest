@@ -1,5 +1,5 @@
-import { TRADES_TABLE } from '../tables';
-import { DBQuery, Trade } from '../types';
+import { TRADES_TABLE } from '@/db/tables';
+import { DBQuery, Trade } from '@/db/types';
 
 export function selectRecentTrades(marketId: string, count: number): DBQuery {
 	return {

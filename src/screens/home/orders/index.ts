@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import OrdersScreen from './orders';
-import NewOrderScreen from './new_order';
+import OrdersScreen from '@/screens/home/orders/orders';
+import NewOrderScreen from '@/screens/home/orders/new_order';
 
 const OrdersTab = createNativeStackNavigator({
 	initialRouteName: 'Orders',

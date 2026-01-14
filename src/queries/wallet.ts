@@ -1,8 +1,8 @@
 import { useQuery /*, useQueryClient */ } from '@tanstack/react-query';
 
-import useDB from '../stores/db';
-import { Asset, Wallet } from '../db/types';
-import { selectAllBalances } from '../db/queries/balances';
+import useDB from '@/stores/db';
+import { Asset, Wallet } from '@/db/types';
+import { selectAllBalances } from '@/db/queries/balances';
 
 export type QueryWallet = Wallet & Asset;
 

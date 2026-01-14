@@ -1,5 +1,5 @@
-import { MARKETS_TABLE } from '../tables';
-import { DBQuery } from '../types';
+import { MARKETS_TABLE } from '@/db/tables';
+import { DBQuery } from '@/db/types';
 
 export function selectAllMarkets(): DBQuery {
 	return { queryString: `SELECT * FROM ${MARKETS_TABLE}` };

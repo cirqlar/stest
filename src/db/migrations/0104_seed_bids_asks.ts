@@ -1,8 +1,8 @@
 import { Scalar } from '@op-engineering/op-sqlite';
 
-import { Migration } from '../types';
-import usdt_orderbook from '../../provided/seed/orderbooks/USDT-NGN.json';
-import usdc_orderbook from '../../provided/seed/orderbooks/USDC-NGN.json';
+import { Migration } from '@/db/types';
+import usdt_orderbook from '@/provided/seed/orderbooks/USDT-NGN.json';
+import usdc_orderbook from '@/provided/seed/orderbooks/USDC-NGN.json';
 
 const seed_bids_asks: Migration = {
 	name: '0104_seed_bids_asks',

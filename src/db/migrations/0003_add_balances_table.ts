@@ -1,5 +1,5 @@
-import { BALANCES_TABLE } from '../tables';
-import { Migration } from '../types';
+import { BALANCES_TABLE } from '@/db/tables';
+import { Migration } from '@/db/types';
 
 const add_balances_table: Migration = {
 	name: '0003_add_balances_table',

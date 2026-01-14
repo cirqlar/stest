@@ -7,11 +7,11 @@ import {
 } from 'react-native';
 import { Link } from '@react-navigation/native';
 
-import { useMarkets } from '../../../queries/markets';
-import { Market as MarketType } from '../../../db/types';
-import LoadingComponent from '../../../components/loading';
-import ErrorComponent from '../../../components/error';
-import useAssets from '../../../stores/assets';
+import { useMarkets } from '@/queries/markets';
+import { Market as MarketType } from '@/db/types';
+import LoadingComponent from '@/components/loading';
+import ErrorComponent from '@/components/error';
+import useAssets from '@/stores/assets';
 
 function MarketsScreen() {
 	return (

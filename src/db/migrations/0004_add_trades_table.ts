@@ -1,5 +1,5 @@
-import { TRADES_TABLE } from '../tables';
-import { Migration } from '../types';
+import { TRADES_TABLE } from '@/db/tables';
+import { Migration } from '@/db/types';
 
 const add_trades_table: Migration = {
 	name: '0004_add_trades_table',

@@ -1,7 +1,9 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import MarketsScreen from './markets';
-import MarketScreen, { Props as MarketScreenProps } from './market';
+import MarketsScreen from '@/screens/home/markets/markets';
+import MarketScreen, {
+	Props as MarketScreenProps,
+} from '@/screens/home/markets/market';
 
 const MarketsTab = createNativeStackNavigator({
 	initialRouteName: 'Markets',

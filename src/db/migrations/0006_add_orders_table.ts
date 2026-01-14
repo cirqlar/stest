@@ -1,5 +1,5 @@
-import { ORDERS_TABLE } from '../tables';
-import { Migration } from '../types';
+import { ORDERS_TABLE } from '@/db/tables';
+import { Migration } from '@/db/types';
 
 const add_orders_table: Migration = {
 	name: '0006_add_orders_table',

@@ -1,5 +1,5 @@
-import { ASSETS_TABLE, BALANCES_TABLE } from '../tables';
-import { DBQuery } from '../types';
+import { ASSETS_TABLE, BALANCES_TABLE } from '@/db/tables';
+import { DBQuery } from '@/db/types';
 
 export function selectAllBalances(): DBQuery {
 	return {
