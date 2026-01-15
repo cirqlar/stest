@@ -13,6 +13,16 @@ export function selectRecentTrades(marketId: string, count: number): DBQuery {
 	};
 }
 
+export function selectSingleTrade(tradeId: string): DBQuery {
+	return {
+		queryString: `
+			SELECT * FROM ${TRADES_TABLE}
+				WHERE tradeId = ?
+		`,
+		params: [tradeId],
+	};
+}
+
 export function insertOrIgnoreTrade(trade: Omit<Trade, 'id'>): DBQuery {
 	return {
 		queryString: `

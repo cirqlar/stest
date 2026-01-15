@@ -61,4 +61,5 @@ test('inserting a bid with a price that already exists updates the existing bid'
 	).rows[0] as OrderBookItem;
 
 	expect(second.id).toEqual(first.id);
+	expect(second.size).toEqual(900);
 });
