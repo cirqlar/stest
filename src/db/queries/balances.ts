@@ -11,6 +11,18 @@ export function selectAllBalances(): DBQuery {
 	};
 }
 
+export function selectSingleBalance(assetId: string): DBQuery {
+	return {
+		queryString: `
+			SELECT b.assetId AS assetId, available, locked, decimals, description FROM ${BALANCES_TABLE} AS b
+			JOIN ${ASSETS_TABLE} AS a
+				ON b.assetId = a.assetId
+				WHERE b.assetId = ?
+		`,
+		params: [assetId],
+	};
+}
+
 export function updateBalance(
 	assetId: string,
 	available: number,

@@ -12,15 +12,18 @@ import ErrorComponent from '@/components/error';
 import { Market, Order } from '@/db/types';
 import { useWalletsQuery } from '@/queries/wallet';
 import useAssets from '@/stores/assets';
-import { useNewOrderMutation } from '@/queries/orders';
+import { NewOrder, useNewOrderMutation } from '@/queries/orders';
 
 function NewOrderScreen() {
 	const navigation = useNavigation();
 	const [step, setStep] = useState(1);
 
 	const [market, setMarket] = useState<Market>();
-	const [order, setOrder] = useState<Partial<Order>>({
+	const [order, setOrder] = useState<NewOrder>({
 		side: 'buy',
+		price: 0,
+		size: 0,
+		marketId: market?.marketId ?? '',
 	});
 
 	const mutation = useNewOrderMutation();
@@ -142,9 +145,9 @@ function PlaceOrder({
 	onSubmit,
 }: {
 	market: Market;
-	order: Partial<Order>;
+	order: NewOrder;
 	submitting: boolean;
-	onChange: (order: Partial<Order>) => void;
+	onChange: (order: NewOrder) => void;
 	onSubmit: () => void;
 }) {
 	const assets = useAssets(s => s.assets);

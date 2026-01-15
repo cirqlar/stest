@@ -55,6 +55,8 @@ export function useOrders(pagination: Pagination = { count: 10, page: 1 }) {
 	return res;
 }
 
+export type NewOrder = Pick<Order, 'side' | 'marketId' | 'price' | 'size'>;
+
 export function useNewOrderMutation() {
 	const db = useDB(s => s.db);
 	const queryClient = useQueryClient();
@@ -64,7 +66,7 @@ export function useNewOrderMutation() {
 			order,
 			market,
 		}: {
-			order: Partial<Order>;
+			order: NewOrder;
 			market: Market;
 		}) => {
 			if (
@@ -85,10 +87,7 @@ export function useNewOrderMutation() {
 			).rows as QueryWallet[];
 
 			const insert_order_query = insertOrder({
-				marketId: order.marketId!,
-				side: order.side!,
-				price: order.price!,
-				size: order.size!,
+				...order,
 				status: 'pending',
 			});
 			let commands: SQLBatchTuple[] = [
@@ -110,8 +109,8 @@ export function useNewOrderMutation() {
 
 				const updated_balance_query = updateBalance(
 					base_balance.assetId,
-					base_balance.available - order.size!,
-					base_balance.locked + order.size!,
+					base_balance.available - order.size,
+					base_balance.locked + order.size,
 				);
 				commands.push([
 					updated_balance_query.queryString,
@@ -121,7 +120,7 @@ export function useNewOrderMutation() {
 				const quote_balance = balances.find(
 					b => b.assetId === market.quote,
 				);
-				const quote_amount = order.size! * order.price!;
+				const quote_amount = order.size * order.price;
 
 				if (!quote_balance) {
 					throw new Error('Missing balance');
